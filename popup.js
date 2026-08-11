@@ -2,11 +2,12 @@
 
 const $ = (id) => document.getElementById(id);
 
-const DEFAULTS = { onlyEmpty: true, paragraphs: 2, loremCount: 3, loremUnit: 'paragraphs' };
+const DEFAULTS = { onlyEmpty: true, onlyRequired: false, paragraphs: 2, loremCount: 3, loremUnit: 'paragraphs' };
 
 async function loadSettings() {
   const s = await chrome.storage.sync.get(DEFAULTS);
   $('onlyEmpty').checked = s.onlyEmpty;
+  $('onlyRequired').checked = s.onlyRequired;
   $('paragraphs').value = s.paragraphs;
   $('loremCount').value = s.loremCount;
   $('loremUnit').value = s.loremUnit;
@@ -15,6 +16,7 @@ async function loadSettings() {
 function saveSettings() {
   chrome.storage.sync.set({
     onlyEmpty: $('onlyEmpty').checked,
+    onlyRequired: $('onlyRequired').checked,
     paragraphs: clampNum($('paragraphs'), 1, 10, 2),
     loremCount: clampNum($('loremCount'), 1, 50, 3),
     loremUnit: $('loremUnit').value
@@ -76,6 +78,7 @@ $('fill').addEventListener('click', async () => {
   saveSettings();
   const options = {
     onlyEmpty: $('onlyEmpty').checked,
+    onlyRequired: $('onlyRequired').checked,
     paragraphs: clampNum($('paragraphs'), 1, 10, 2)
   };
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
@@ -119,7 +122,7 @@ $('copy').addEventListener('click', async () => {
   setTimeout(() => { $('copy').textContent = 'Copy'; }, 1200);
 });
 
-for (const id of ['onlyEmpty', 'paragraphs', 'loremCount', 'loremUnit']) {
+for (const id of ['onlyEmpty', 'onlyRequired', 'paragraphs', 'loremCount', 'loremUnit']) {
   $(id).addEventListener('change', saveSettings);
 }
 

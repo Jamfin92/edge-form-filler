@@ -35,7 +35,7 @@ After editing any file, go to `edge://extensions` and click the **Reload** (circ
 
 ## Usage
 
-- **Toolbar popup** — click the extension icon → **Fill forms on this page**. Options: only fill empty fields (on by default) and how many Lorem paragraphs go into textareas. The popup also has a standalone Lorem Ipsum generator (paragraphs / sentences / words) with one-click copy.
+- **Toolbar popup** — click the extension icon → **Fill forms on this page**. Options: only fill empty fields (on by default), only fill required fields (off by default; a field counts as required if it has the `required`/`aria-required` attribute or a `*` in its label), and how many Lorem paragraphs go into textareas. The popup also has a standalone Lorem Ipsum generator (paragraphs / sentences / words) with one-click copy.
 - **Right-click menu** — *Fill forms with sample data* anywhere on a page, or *Insert Lorem Ipsum here* on any text box, textarea, or rich-text (contenteditable) editor.
 - **Keyboard** — `Alt+Shift+F` fills the current page (rebindable at `edge://extensions/shortcuts`).
 
@@ -47,7 +47,11 @@ After editing any file, go to `edge://extensions` and click the **Reload** (circ
 | Email | `jordan.miller482@example.com` (reserved example domain) |
 | Phone | `(415) 555-0142` (reserved fictional range) |
 | Address, city, state, ZIP, country | Plausible US address |
-| Company, job title, website | Sample values |
+| Middle name / initial | Persona middle name, `T.` for initials |
+| Company, job title, department, industry, website | Sample values |
+| Product, service | Generated names (`Nimbus Tracker Pro`, `Premium Support`) |
+| USD currency (price, amount, cost, fee, total, salary, …) | `$1,234.56` — plain digits when the input is numeric-only; salaries as round yearly figures |
+| Quantity, percent/rate, SKU, order/invoice number, SSN | Plausible test values (SSN uses the invalid `000-…` range) |
 | Date / time / datetime / month / week / color / range / number | Valid values respecting `min`/`max`/`step`; birth dates get adult ages |
 | Card number / CVV / expiry | Standard test values (`4111 1111 1111 1111`) |
 | Selects | Random real option (skips placeholder/disabled) |
@@ -60,6 +64,7 @@ Field intent is detected from `name`, `id`, `placeholder`, `<label>`, `aria-labe
 ## Notes
 
 - Values are set through the native prototype setters and `input`/`change` events are dispatched, so React, Vue, and Angular controlled forms register the values.
+- Fills run in passes (up to 5): after radios/checkboxes/selects are set, the page gets a moment to reveal conditional fields, which are then filled too — recursively, so a field revealed by a revealed field is also covered. Choices made in earlier passes are pinned and never re-rolled.
 - Works inside iframes (`all_frames`) and open shadow roots.
 - Skips disabled, read-only, hidden, and invisible fields.
 - Filled fields flash briefly so you can see what was touched.
@@ -67,7 +72,7 @@ Field intent is detected from `name`, `id`, `placeholder`, `<label>`, `aria-labe
 
 ## Test page
 
-Open `test/test-form.html` in the browser for a page with every supported field type, including a shadow-DOM widget, a contenteditable editor, and disabled/read-only fields that should be skipped.
+Open `test/test-form.html` in the browser for a page with every supported field type, including commerce/currency fields, a required-only section, conditional fields revealed by radio/checkbox choices (two levels deep), a shadow-DOM widget, a contenteditable editor, and disabled/read-only fields that should be skipped.
 
 ## Files
 

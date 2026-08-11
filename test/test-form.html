@@ -88,6 +88,67 @@
     </fieldset>
 
     <fieldset>
+      <legend>Commerce fields</legend>
+      <label for="mname">Middle name</label>
+      <input id="mname" name="middle_name" type="text">
+      <label for="prod">Product name</label>
+      <input id="prod" name="product_name" type="text">
+      <label for="svc">Service</label>
+      <input id="svc" name="service_type" type="text">
+      <label for="dept">Department</label>
+      <input id="dept" name="department" type="text">
+      <label for="total">Total amount (USD)</label>
+      <input id="total" name="total_amount" type="text">
+      <label for="uprice">Unit price (numeric only)</label>
+      <input id="uprice" name="unit_price" type="text" inputmode="decimal">
+      <label for="sal">Salary</label>
+      <input id="sal" name="salary" type="text">
+      <label for="ordno">Order number</label>
+      <input id="ordno" name="order_number" type="text">
+      <label for="sku">SKU</label>
+      <input id="sku" name="sku" type="text">
+    </fieldset>
+
+    <fieldset>
+      <legend>Required-only mode (enable “Only fill required fields”)</legend>
+      <label for="req1">Company * (label asterisk)</label>
+      <input id="req1" name="company_name" type="text">
+      <label for="req2">Email (required attribute)</label>
+      <input id="req2" name="work_email" type="email" required>
+      <label for="req3">Job title (aria-required)</label>
+      <input id="req3" name="job_title" type="text" aria-required="true">
+      <label for="opt1">Nickname (optional — skipped in required-only mode)</label>
+      <input id="opt1" name="nickname" type="text">
+    </fieldset>
+
+    <fieldset>
+      <legend>Conditional fields (revealed by choices)</legend>
+      <div class="inline">
+        <p><strong>Shipping method</strong></p>
+        <label><input type="radio" name="ship_method" value="pickup"> Pickup</label>
+        <label><input type="radio" name="ship_method" value="delivery"> Delivery</label>
+      </div>
+      <div id="ship-extra" hidden>
+        <label for="ship-street">Delivery street (appears after choosing)</label>
+        <input id="ship-street" name="delivery_street" type="text">
+        <div class="inline">
+          <p><strong>Delivery speed</strong></p>
+          <label><input type="radio" name="ship_speed" value="standard"> Standard</label>
+          <label><input type="radio" name="ship_speed" value="express"> Express</label>
+        </div>
+        <div id="speed-extra" hidden>
+          <label for="ship-notes">Courier notes (appears after speed is chosen)</label>
+          <input id="ship-notes" name="courier_notes" type="text">
+        </div>
+      </div>
+      <label><input type="checkbox" id="gift" name="gift_wrap"> Gift wrap</label>
+      <div id="gift-extra" hidden>
+        <label for="gift-msg">Gift message (appears when gift wrap is checked)</label>
+        <textarea id="gift-msg" name="gift_message" rows="2"></textarea>
+      </div>
+    </fieldset>
+
+    <fieldset>
       <legend>Long text</legend>
       <label for="bio">Bio</label>
       <textarea id="bio" name="bio" rows="5"></textarea>
@@ -106,6 +167,17 @@
   </form>
 
   <script>
+    // Conditional sections for testing the recursive fill passes.
+    for (const r of document.querySelectorAll('input[name="ship_method"]')) {
+      r.addEventListener('change', () => { document.getElementById('ship-extra').hidden = false; });
+    }
+    for (const r of document.querySelectorAll('input[name="ship_speed"]')) {
+      r.addEventListener('change', () => { document.getElementById('speed-extra').hidden = false; });
+    }
+    document.getElementById('gift').addEventListener('change', (e) => {
+      document.getElementById('gift-extra').hidden = !e.target.checked;
+    });
+
     const host = document.getElementById('shadow-host');
     const root = host.attachShadow({ mode: 'open' });
     root.innerHTML = `

@@ -19,6 +19,12 @@
   const STATES = ['CA', 'NY', 'TX', 'WA', 'IL', 'CO', 'GA', 'NC', 'OH', 'AZ', 'OR', 'MA'];
   const COMPANIES = ['Acme Corp', 'Globex', 'Initech', 'Umbrella Labs', 'Aperture Science', 'Vandelay Industries', 'Wonka Ltd', 'Hooli', 'Soylent Co', 'Cyberdyne Systems'];
   const JOB_TITLES = ['Software Engineer', 'Product Manager', 'Designer', 'Data Analyst', 'Marketing Lead', 'Operations Manager', 'Consultant', 'Accountant'];
+  const PRODUCT_ADJ = ['Turbo', 'Quantum', 'Nimbus', 'Vertex', 'Atlas', 'Pulse', 'Nova', 'Orbit', 'Zephyr', 'Apex'];
+  const PRODUCT_NOUN = ['Widget', 'Gizmo', 'Toolkit', 'Tracker', 'Hub', 'Console', 'Planner', 'Router', 'Blender', 'Kit'];
+  const PRODUCT_SUFFIX = ['Pro', 'Mini', 'X', '360', '3000', 'Plus'];
+  const SERVICES = ['Consulting', 'Installation', 'Maintenance', 'Training', 'Onboarding', 'Premium Support', 'Auditing', 'Cloud Hosting', 'Managed Backup', 'Same-Day Delivery'];
+  const DEPARTMENTS = ['Engineering', 'Marketing', 'Sales', 'Operations', 'Finance', 'Human Resources', 'Customer Support', 'Design'];
+  const INDUSTRIES = ['Software', 'Healthcare', 'Retail', 'Manufacturing', 'Education', 'Finance', 'Hospitality', 'Logistics'];
 
   function makePersona() {
     const first = pick(FIRST_NAMES);
@@ -27,7 +33,10 @@
     return {
       first,
       last,
+      middle: pick(FIRST_NAMES),
       full: `${first} ${last}`,
+      product: `${pick(PRODUCT_ADJ)} ${pick(PRODUCT_NOUN)} ${pick(PRODUCT_SUFFIX)}`,
+      service: pick(SERVICES),
       email: `${first}.${last}${n}@example.com`.toLowerCase(),
       username: `${first}${last}${n}`.toLowerCase(),
       password: `Xk${randInt(10, 99)}!aB${randInt(100, 999)}z`,
@@ -57,7 +66,7 @@
     [/last.?name|family|surname|lname/, (p) => p.last],
     [/company|organi[sz]ation|employer|business.?name/, (p) => p.company],
     [/job|title|role|position|occupation/, (p) => p.job],
-    [/address.?(2|two)|line.?2|apt|suite|unit/, (p) => p.unit],
+    [/address.?(2|two)|line.?2|\bapt\b|suite|\bunit\b(?!.?price)/, (p) => p.unit],
     [/street|address/, (p) => p.street],
     [/city|town|locality/, (p) => p.city],
     [/state|province|region/, (p) => p.state],
@@ -68,6 +77,19 @@
     [/card.?number|cc.?num/, () => '4111111111111111'],
     [/cvv|cvc|security.?code/, () => String(randInt(100, 999))],
     [/expir|exp.?date/, () => `12/${randInt(27, 32)}`],
+    [/middle.?init|\bm\.?i\.?\b/, (p) => p.middle[0] + '.'],
+    [/middle.?name|\bmiddle\b/, (p) => p.middle],
+    [/salary|\bincome\b|compensation|annual.?pay/, (p, el) => usdWhole(30000, 200000, el)],
+    [/price|\bamount\b|\bcost\b|\bfee\b|budget|\btotal\b|subtotal|payment|\bbalance\b|revenue|\busd\b|dollar/, (p, el) => usdCents(5, 2500, el)],
+    [/percent|discount|\brate\b|\btax\b/, () => String(randInt(5, 30))],
+    [/quantit|\bqty\b|\bunits\b/, () => String(randInt(1, 12))],
+    [/\bsku\b|part.?(no|num)|model.?(no|num)|item.?(code|no|num)/, () => `SKU-${randInt(1000, 9999)}-${pick(['A', 'B', 'K', 'X'])}${randInt(1, 9)}`],
+    [/order.?(no|num|id)|invoice|confirmation|tracking|reference.?(no|num)/, () => `${pick(['ORD', 'INV', 'REF'])}-${randInt(100000, 999999)}`],
+    [/product|item.?name|merchandise/, (p) => p.product],
+    [/\bservice\b|\bplan\b|package|\btier\b|subscription/, (p) => p.service],
+    [/department|division|\bteam\b/, () => pick(DEPARTMENTS)],
+    [/industry|sector/, () => pick(INDUSTRIES)],
+    [/ssn|social.?security/, () => `000-${randInt(10, 99)}-${randInt(1000, 9999)}`],
     [/subject|headline|caption/, () => loremWords(randInt(3, 6), true)],
     [/message|comment|description|bio|about|notes|feedback|summary/, () => loremSentences(2)],
     [/search|query|keyword/, () => loremWords(2)],
@@ -78,16 +100,23 @@
     return `${randInt(y1, y2)}-${pad2(randInt(1, 12))}-${pad2(randInt(1, 28))}`;
   }
 
+  // USD helpers: plain digits for inputs that reject symbols (numeric/decimal
+  // inputmode or a digit-only pattern), "$1,234.56" style everywhere else.
+  function moneyFormat(n, el) {
+    const numericOnly = el && (el.inputMode === 'numeric' || el.inputMode === 'decimal' || /\d|0-9/.test(el.pattern || ''));
+    if (numericOnly) return Number.isInteger(n) ? String(n) : n.toFixed(2);
+    return '$' + n.toLocaleString('en-US', {
+      minimumFractionDigits: Number.isInteger(n) ? 0 : 2,
+      maximumFractionDigits: 2
+    });
+  }
+  const usdCents = (min, max, el) => moneyFormat(randInt(min * 100, max * 100) / 100, el);
+  const usdWhole = (min, max, el) => moneyFormat(Math.round(randInt(min, max) / 500) * 500, el);
+
   // ------------------------------------------------------------------- helpers
 
-  function tokensFor(el) {
-    const bits = [
-      el.name, el.id, el.placeholder,
-      el.getAttribute('aria-label'),
-      el.getAttribute('autocomplete'),
-      el.getAttribute('data-testid'),
-      el.title
-    ];
+  function labelTexts(el) {
+    const bits = [];
     if (el.labels) for (const l of el.labels) bits.push(l.textContent);
     const labelledBy = el.getAttribute('aria-labelledby');
     if (labelledBy) {
@@ -101,7 +130,30 @@
       const wrap = el.closest('label');
       if (wrap) bits.push(wrap.textContent);
     }
-    return bits.filter(Boolean).join(' ').toLowerCase();
+    return bits.filter(Boolean);
+  }
+
+  function tokensFor(el) {
+    const bits = [
+      el.name, el.id, el.placeholder,
+      el.getAttribute('aria-label'),
+      el.getAttribute('autocomplete'),
+      el.getAttribute('data-testid'),
+      el.title,
+      ...labelTexts(el)
+    ];
+    // Split camelCase and snake/kebab-case so \b-bounded patterns can see
+    // the words inside "totalAmount" or "unit_price".
+    return bits.filter(Boolean).join(' ')
+      .replace(/([a-z0-9])([A-Z])/g, '$1 $2')
+      .replace(/[_-]+/g, ' ')
+      .toLowerCase();
+  }
+
+  // "Required" means the required/aria-required attribute or a * in the label.
+  function isRequired(el) {
+    if (el.required || el.getAttribute('aria-required') === 'true') return true;
+    return labelTexts(el).some((t) => t.includes('*'));
   }
 
   function isVisible(el) {
@@ -186,25 +238,52 @@
       default: {
         const tokens = tokensFor(el);
         for (const [re, gen] of TEXT_PATTERNS) {
-          if (re.test(tokens)) return gen(persona);
+          if (re.test(tokens)) return gen(persona, el);
         }
         return loremWords(randInt(2, 4), true);
       }
     }
   }
 
-  function fillPage(options) {
+  // Fill in passes: checking a radio/checkbox or picking a select option often
+  // reveals conditional fields the page renders on change. After each pass
+  // that filled something, wait for the page to settle and sweep again for
+  // fields that appeared. `done` and `pickedRadioGroups` pin every decision so
+  // later passes never refill a field or re-roll a choice — flipping a radio
+  // back and forth would toggle the very sections we're trying to fill.
+  const MAX_PASSES = 5;
+  const settle = () => new Promise((resolve) => setTimeout(resolve, 200));
+
+  async function fillPage(options) {
     const persona = makePersona();
+    const done = new WeakSet();
+    const pickedRadioGroups = new Set();
+    let filled = 0;
+    for (let pass = 0; pass < MAX_PASSES; pass++) {
+      const n = fillOnce(persona, options, done, pickedRadioGroups);
+      filled += n;
+      if (n === 0) break;
+      await settle();
+    }
+    return filled;
+  }
+
+  function fillOnce(persona, options, done, pickedRadioGroups) {
     const fields = collectFields(document, []);
     const radioGroups = new Map();
     let filled = 0;
 
     for (const el of fields) {
       try {
+        if (done.has(el)) continue;
+        // Radios are exempt: requiredness is judged per group below.
+        if (options.onlyRequired && !(el instanceof HTMLInputElement && el.type === 'radio') && !isRequired(el)) continue;
+
         if (el instanceof HTMLInputElement) {
           if (!isFillable(el)) continue;
 
           if (el.type === 'checkbox') {
+            done.add(el);
             if (options.onlyEmpty && el.checked) continue;
             if (el.required || Math.random() < 0.6) {
               if (!el.checked) el.click();
@@ -213,27 +292,30 @@
             continue;
           }
           if (el.type === 'radio') {
-            const key = (el.form ? 'f' : 'd') + ' ' + el.name;
+            const key = (el.form ? 'f' : 'd') + ' ' + el.name;
+            if (pickedRadioGroups.has(key)) { done.add(el); continue; }
             if (!radioGroups.has(key)) radioGroups.set(key, []);
             radioGroups.get(key).push(el);
             continue;
           }
-          if (options.onlyEmpty && el.value !== '') continue;
+          if (options.onlyEmpty && el.value !== '') { done.add(el); continue; }
 
           const value = clampToMaxLength(el, valueForInput(el, persona, options));
           setNativeValue(el, value);
+          done.add(el);
           flash(el); filled++;
 
         } else if (el instanceof HTMLTextAreaElement) {
           if (!isFillable(el)) continue;
-          if (options.onlyEmpty && el.value !== '') continue;
+          if (options.onlyEmpty && el.value !== '') { done.add(el); continue; }
           const text = clampToMaxLength(el, loremParagraphs(options.paragraphs));
           setNativeValue(el, text);
+          done.add(el);
           flash(el); filled++;
 
         } else if (el instanceof HTMLSelectElement) {
           if (!isFillable(el)) continue;
-          if (options.onlyEmpty && el.selectedIndex > 0) continue;
+          if (options.onlyEmpty && el.selectedIndex > 0) { done.add(el); continue; }
           const opts = Array.from(el.options).filter((o) => !o.disabled && o.value !== '');
           if (!opts.length) continue;
           if (el.multiple) {
@@ -244,13 +326,15 @@
           } else {
             setNativeValue(el, pick(opts).value);
           }
+          done.add(el);
           flash(el); filled++;
 
         } else if (el.isContentEditable) {
           if (!isVisible(el)) continue;
-          if (options.onlyEmpty && el.textContent.trim() !== '') continue;
+          if (options.onlyEmpty && el.textContent.trim() !== '') { done.add(el); continue; }
           el.textContent = loremParagraph();
           el.dispatchEvent(new Event('input', { bubbles: true }));
+          done.add(el);
           flash(el); filled++;
         }
       } catch (e) {
@@ -258,9 +342,12 @@
       }
     }
 
-    for (const group of radioGroups.values()) {
+    for (const [key, group] of radioGroups) {
+      if (options.onlyRequired && !group.some((r) => isRequired(r))) continue;
       const enabled = group.filter((r) => isFillable(r));
       if (!enabled.length) continue;
+      pickedRadioGroups.add(key);
+      for (const r of group) done.add(r);
       if (options.onlyEmpty && group.some((r) => r.checked)) continue;
       const choice = pick(enabled);
       if (!choice.checked) choice.click();
@@ -300,7 +387,7 @@
 
   // ------------------------------------------------------------------ messages
 
-  const DEFAULT_OPTIONS = { onlyEmpty: true, paragraphs: 2 };
+  const DEFAULT_OPTIONS = { onlyEmpty: true, onlyRequired: false, paragraphs: 2 };
 
   async function resolveOptions(msg) {
     if (msg.options) return { ...DEFAULT_OPTIONS, ...msg.options };
@@ -321,7 +408,7 @@
     (async () => {
       const options = await resolveOptions(msg);
       if (msg.action === 'fillForms') {
-        sendResponse({ filled: fillPage(options) });
+        sendResponse({ filled: await fillPage(options) });
       } else if (msg.action === 'loremIntoTarget') {
         sendResponse({ filled: loremIntoTarget(options) });
       } else {
