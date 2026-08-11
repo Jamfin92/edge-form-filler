@@ -2,13 +2,36 @@
 
 A Microsoft Edge extension (Manifest V3) for development and testing: autofills form pages with plausible sample data and fills long text boxes with Lorem Ipsum.
 
-## Install (Edge)
+## Run it locally
+
+No build step, no dependencies — the folder is loaded into the browser as-is.
+
+### 1. Get the code
+
+```bash
+git clone https://github.com/Jamfin92/edge-form-filler.git
+```
+
+### 2. Load it in Edge
 
 1. Open `edge://extensions`
-2. Turn on **Developer mode** (bottom-left toggle)
-3. Click **Load unpacked** and select this folder
+2. Turn on **Developer mode** (toggle in the bottom-left)
+3. Click **Load unpacked** and select the `edge-form-filler` folder
+4. Pin the icon via the toolbar puzzle-piece menu if you want one-click access
 
-Also works unchanged in Chrome via `chrome://extensions`.
+Also works unchanged in Chrome: `chrome://extensions` → Developer mode → Load unpacked.
+
+### 3. Try it
+
+1. Open `test/test-form.html` in a browser tab (drag it in, or `file:///…/edge-form-filler/test/test-form.html`)
+2. Click the extension icon → **Fill forms on this page** (or press `Alt+Shift+F`)
+3. Every field should fill with sample data; the disabled/read-only/hidden fields at the bottom of the *Misc* section should stay untouched
+
+> **Note:** to run on `file://` pages like the test form, enable **Allow access to file URLs** on the extension's details page (`edge://extensions` → Details). Regular `http(s)` pages work without it.
+
+### 4. Make changes
+
+After editing any file, go to `edge://extensions` and click the **Reload** (circular arrow) button on the extension card, then refresh the page you're testing on. Popup-only changes (`popup.*`) just need the popup reopened.
 
 ## Usage
 
