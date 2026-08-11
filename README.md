@@ -31,7 +31,7 @@ Also works unchanged in Chrome: `chrome://extensions` → Developer mode → Loa
 
 ### 4. Make changes
 
-After editing any file, go to `edge://extensions` and click the **Reload** (circular arrow) button on the extension card, then refresh the page you're testing on. Popup-only changes (`popup.*`) just need the popup reopened.
+After editing any file, go to `edge://extensions` and click the **Reload** (circular arrow) button on the extension card. Tabs that were already open are re-injected automatically on the next fill, so no page refresh is needed. Popup-only changes (`popup.*`) just need the popup reopened.
 
 ## Usage
 

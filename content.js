@@ -279,7 +279,9 @@
   }, true);
 
   function loremIntoTarget(options) {
-    const el = lastContextTarget;
+    // If we were injected after the right-click we never saw the contextmenu
+    // event; the clicked field still holds focus, so fall back to it.
+    const el = lastContextTarget || document.activeElement;
     if (!el) return 0;
     if (el instanceof HTMLTextAreaElement) {
       setNativeValue(el, clampToMaxLength(el, loremParagraphs(options.paragraphs)));

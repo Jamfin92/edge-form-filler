@@ -33,19 +33,45 @@ function showStatus(text) {
   el.hidden = false;
 }
 
+// Pages the browser refuses to script: its own UI and the extension stores.
+// A missing url means we have no access to the tab at all — same verdict.
+function isRestricted(url) {
+  if (!url || !/^(https?|file|ftp):/i.test(url)) return true;
+  return /^https:\/\/(microsoftedge\.microsoft\.com\/addons|chrome\.google\.com\/webstore|chromewebstore\.google\.com)\//i.test(url);
+}
+
+// Manifest content scripts only reach pages loaded after the extension was
+// installed or reloaded — inject on demand for tabs that predate it.
+async function sendToTab(tab, message) {
+  try {
+    return await chrome.tabs.sendMessage(tab.id, message);
+  } catch (e) {
+    await chrome.scripting.executeScript({
+      target: { tabId: tab.id, allFrames: true },
+      files: ['lorem.js', 'content.js']
+    });
+    return chrome.tabs.sendMessage(tab.id, message);
+  }
+}
+
 $('fill').addEventListener('click', async () => {
   saveSettings();
   const options = {
     onlyEmpty: $('onlyEmpty').checked,
     paragraphs: clampNum($('paragraphs'), 1, 10, 2)
   };
+  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+  if (!tab || tab.id == null || isRestricted(tab.url)) {
+    showStatus('Can’t run on this page (browser pages and the extension store are off-limits).');
+    return;
+  }
   try {
-    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-    if (!tab || tab.id == null) throw new Error('no tab');
-    const res = await chrome.tabs.sendMessage(tab.id, { action: 'fillForms', options });
+    const res = await sendToTab(tab, { action: 'fillForms', options });
     showStatus(`Filled ${res && res.filled != null ? res.filled : 0} field${res && res.filled === 1 ? '' : 's'}.`);
   } catch (e) {
-    showStatus('Can’t run on this page (browser pages and the extension store are off-limits).');
+    showStatus(tab.url.startsWith('file:')
+      ? 'Turn on “Allow access to file URLs” for this extension on the edge://extensions card, then retry.'
+      : 'Can’t run on this page (browser pages and the extension store are off-limits).');
   }
 });
 

@@ -3,7 +3,7 @@
   "name": "Form Filler & Lorem Ipsum",
   "version": "1.0.0",
   "description": "Autofill forms with realistic sample data and fill long text boxes with Lorem Ipsum. Built for development and testing.",
-  "permissions": ["storage", "contextMenus", "clipboardWrite"],
+  "permissions": ["storage", "contextMenus", "clipboardWrite", "activeTab", "scripting"],
   "background": {
     "service_worker": "background.js"
   },
