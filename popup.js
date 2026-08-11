@@ -40,18 +40,36 @@ function isRestricted(url) {
   return /^https:\/\/(microsoftedge\.microsoft\.com\/addons|chrome\.google\.com\/webstore|chromewebstore\.google\.com)\//i.test(url);
 }
 
-// Manifest content scripts only reach pages loaded after the extension was
-// installed or reloaded — inject on demand for tabs that predate it.
-async function sendToTab(tab, message) {
-  try {
-    return await chrome.tabs.sendMessage(tab.id, message);
-  } catch (e) {
-    await chrome.scripting.executeScript({
-      target: { tabId: tab.id, allFrames: true },
-      files: ['lorem.js', 'content.js']
-    });
-    return chrome.tabs.sendMessage(tab.id, message);
+// Serialized and executed inside each frame's isolated world. Returns null
+// when the content script never loaded there.
+const FILL_IN_FRAME = (opts) =>
+  (typeof window.__formFillerFill === 'function' ? window.__formFillerFill(opts) : null);
+
+// Run the fill in every frame and sum the per-frame counts. Frames the
+// manifest content scripts never reached (the tab predates install/reload)
+// return null — inject them there and run once more.
+async function fillAllFrames(tab, options) {
+  let results = await chrome.scripting.executeScript({
+    target: { tabId: tab.id, allFrames: true },
+    func: FILL_IN_FRAME,
+    args: [options]
+  });
+  const missing = results.filter((r) => r.result == null).map((r) => r.frameId);
+  if (missing.length) {
+    try {
+      await chrome.scripting.executeScript({
+        target: { tabId: tab.id, frameIds: missing },
+        files: ['lorem.js', 'content.js']
+      });
+      const retried = await chrome.scripting.executeScript({
+        target: { tabId: tab.id, frameIds: missing },
+        func: FILL_IN_FRAME,
+        args: [options]
+      });
+      results = results.concat(retried);
+    } catch (e) { /* some frames are unscriptable (about:blank, sandboxed) */ }
   }
+  return results.reduce((sum, r) => sum + (r.result || 0), 0);
 }
 
 $('fill').addEventListener('click', async () => {
@@ -66,8 +84,8 @@ $('fill').addEventListener('click', async () => {
     return;
   }
   try {
-    const res = await sendToTab(tab, { action: 'fillForms', options });
-    showStatus(`Filled ${res && res.filled != null ? res.filled : 0} field${res && res.filled === 1 ? '' : 's'}.`);
+    const filled = await fillAllFrames(tab, options);
+    showStatus(`Filled ${filled} field${filled === 1 ? '' : 's'}.`);
   } catch (e) {
     showStatus(tab.url.startsWith('file:')
       ? 'Turn on “Allow access to file URLs” for this extension on the edge://extensions card, then retry.'

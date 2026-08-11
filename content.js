@@ -312,6 +312,11 @@
     }
   }
 
+  // Exposed for the popup, which runs the fill per frame via chrome.scripting
+  // to get an accurate total (a broadcast sendMessage returns only the first
+  // frame's response, so an empty iframe answering fast reads as "Filled 0").
+  window.__formFillerFill = (opts) => fillPage({ ...DEFAULT_OPTIONS, ...(opts || {}) });
+
   chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     (async () => {
       const options = await resolveOptions(msg);
