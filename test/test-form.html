@@ -11,6 +11,8 @@
     textarea { max-width: 100%; }
     .inline label { display: inline; font-weight: 400; margin-right: 14px; }
     [contenteditable] { border: 1px dashed #999; border-radius: 6px; padding: 10px; min-height: 60px; max-width: 100%; }
+    .req-css::after { content: " *"; color: #c00; }
+    .star { color: #c00; font-weight: 700; }
   </style>
 </head>
 <body>
@@ -119,6 +121,23 @@
       <input id="req3" name="job_title" type="text" aria-required="true">
       <label for="opt1">Nickname (optional — skipped in required-only mode)</label>
       <input id="opt1" name="nickname" type="text">
+    </fieldset>
+
+    <fieldset>
+      <legend>Required markers elsewhere on the page (also fill in required-only mode)</legend>
+      <label for="css-req" class="req-css">Billing email (CSS ::after asterisk)</label>
+      <input id="css-req" name="billing_email" type="email">
+      <div>
+        <label for="span-req">Reference number</label> <span class="star">*</span>
+        <input id="span-req" name="reference_number" type="text">
+      </div>
+      <div class="inline">
+        <p><strong>Payment method <span class="star">*</span></strong></p>
+        <label><input type="radio" name="pay_method" value="card"> Card</label>
+        <label><input type="radio" name="pay_method" value="ach"> ACH</label>
+      </div>
+      <label for="opt2">Coupon code (optional — skipped in required-only mode)</label>
+      <input id="opt2" name="coupon_code" type="text">
     </fieldset>
 
     <fieldset>

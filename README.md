@@ -35,7 +35,7 @@ After editing any file, go to `edge://extensions` and click the **Reload** (circ
 
 ## Usage
 
-- **Toolbar popup** — click the extension icon → **Fill forms on this page**. Options: only fill empty fields (on by default), only fill required fields (off by default; a field counts as required if it has the `required`/`aria-required` attribute or a `*` in its label), and how many Lorem paragraphs go into textareas. The popup also has a standalone Lorem Ipsum generator (paragraphs / sentences / words) with one-click copy.
+- **Toolbar popup** — click the extension icon → **Fill forms on this page**. Options: only fill empty fields (on by default), only fill required fields (off by default; a field counts as required if it has the `required`/`aria-required` attribute or an asterisk marking it — in the label text, CSS-generated via `::before`/`::after`, or anywhere in the field's own wrapper, including radio-group headings), and how many Lorem paragraphs go into textareas. The popup also has a standalone Lorem Ipsum generator (paragraphs / sentences / words) with one-click copy.
 - **Right-click menu** — *Fill forms with sample data* anywhere on a page, or *Insert Lorem Ipsum here* on any text box, textarea, or rich-text (contenteditable) editor.
 - **Keyboard** — `Alt+Shift+F` fills the current page (rebindable at `edge://extensions/shortcuts`).
 

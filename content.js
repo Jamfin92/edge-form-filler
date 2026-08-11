@@ -150,10 +150,50 @@
       .toLowerCase();
   }
 
-  // "Required" means the required/aria-required attribute or a * in the label.
+  // "Required" is detected from the required/aria-required attributes or an
+  // asterisk marking the field: in its label text, rendered via CSS
+  // ::before/::after (a common convention), or anywhere inside the field's
+  // own wrapper — the nearest ancestors holding no other fields, so a
+  // section-wide "* = required" note can't mark every field around it.
+  const STAR_RE = /[*＊✱✳]/;
+
+  function pseudoStar(node) {
+    for (const pseudo of ['::before', '::after']) {
+      const c = getComputedStyle(node, pseudo).content;
+      if (c && STAR_RE.test(c)) return true;
+    }
+    return false;
+  }
+
+  function hasStarMark(node) {
+    if (STAR_RE.test(node.textContent)) return true;
+    return [node, ...node.querySelectorAll('*')].slice(0, 40).some(pseudoStar);
+  }
+
+  // Nearest ancestor containing no form controls besides `el` (radios of the
+  // same group don't count, so a group heading's star marks the group).
+  function fieldWrapper(el) {
+    const sameRadioGroup = (c) => el.type === 'radio' &&
+      c instanceof HTMLInputElement && c.type === 'radio' && c.name === el.name;
+    let best = null;
+    for (let node = el.parentElement, hops = 0; node && hops < 4; node = node.parentElement, hops++) {
+      const controls = node.querySelectorAll('input:not([type="hidden"]), textarea, select, [contenteditable=""], [contenteditable="true"]');
+      if (![...controls].every((c) => c === el || sameRadioGroup(c))) break;
+      best = node;
+      if (node.tagName === 'FORM' || node.tagName === 'BODY') break;
+    }
+    return best;
+  }
+
   function isRequired(el) {
     if (el.required || el.getAttribute('aria-required') === 'true') return true;
-    return labelTexts(el).some((t) => t.includes('*'));
+    if (labelTexts(el).some((t) => STAR_RE.test(t))) return true;
+    const labels = el.labels ? [...el.labels] : [];
+    const wrap = el.closest('label');
+    if (wrap) labels.push(wrap);
+    if (labels.some(hasStarMark)) return true;
+    const wrapper = fieldWrapper(el);
+    return wrapper ? hasStarMark(wrapper) : false;
   }
 
   function isVisible(el) {
