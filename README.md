@@ -85,3 +85,7 @@ popup.html/js/css  Toolbar popup UI
 icons/           Generated PNG icons
 test/            Test form page
 ```
+
+## License
+
+[MIT](LICENSE)
