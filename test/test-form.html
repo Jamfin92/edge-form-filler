@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Form Filler test page</title>
+  <style>
+    body { font: 14px/1.5 system-ui, sans-serif; max-width: 720px; margin: 32px auto; padding: 0 16px; }
+    fieldset { margin-bottom: 20px; border: 1px solid #ccc; border-radius: 8px; }
+    label { display: block; margin: 10px 0 2px; font-weight: 600; }
+    input, select, textarea { font: inherit; padding: 6px 8px; width: 100%; max-width: 320px; box-sizing: border-box; }
+    textarea { max-width: 100%; }
+    .inline label { display: inline; font-weight: 400; margin-right: 14px; }
+    [contenteditable] { border: 1px dashed #999; border-radius: 6px; padding: 10px; min-height: 60px; max-width: 100%; }
+  </style>
+</head>
+<body>
+  <h1>Form Filler test page</h1>
+  <p>Load the extension, then click <em>Fill forms on this page</em> (or press Alt+Shift+F).</p>
+
+  <form>
+    <fieldset>
+      <legend>Identity</legend>
+      <label for="fname">First name</label>
+      <input id="fname" name="first_name" type="text">
+      <label for="lname">Last name</label>
+      <input id="lname" name="last_name" type="text">
+      <label for="email">Email</label>
+      <input id="email" name="email" type="email">
+      <label for="phone">Phone</label>
+      <input id="phone" name="phone" type="tel">
+      <label for="user">Username</label>
+      <input id="user" name="username" type="text" autocomplete="username">
+      <label for="pw">Password</label>
+      <input id="pw" name="password" type="password">
+      <label for="dob">Date of birth</label>
+      <input id="dob" name="dob" type="date">
+    </fieldset>
+
+    <fieldset>
+      <legend>Address</legend>
+      <label for="street">Street address</label>
+      <input id="street" name="street_address" type="text" autocomplete="street-address">
+      <label for="unit">Address line 2</label>
+      <input id="unit" name="address_line2" type="text">
+      <label for="city">City</label>
+      <input id="city" name="city" type="text">
+      <label for="state">State</label>
+      <select id="state" name="state">
+        <option value="">Choose a state…</option>
+        <option>California</option>
+        <option>New York</option>
+        <option>Texas</option>
+        <option>Washington</option>
+      </select>
+      <label for="zip">ZIP code</label>
+      <input id="zip" name="zip" type="text" maxlength="10">
+    </fieldset>
+
+    <fieldset>
+      <legend>Misc field types</legend>
+      <label for="qty">Quantity (3–15, step 3)</label>
+      <input id="qty" name="quantity" type="number" min="3" max="15" step="3">
+      <label for="vol">Range</label>
+      <input id="vol" name="volume" type="range" min="0" max="100">
+      <label for="col">Favorite color</label>
+      <input id="col" name="favorite_color" type="color">
+      <label for="appt">Appointment</label>
+      <input id="appt" name="appointment" type="datetime-local">
+      <label for="site">Website</label>
+      <input id="site" name="website" type="url">
+
+      <div class="inline">
+        <p><strong>Contact preference</strong></p>
+        <label><input type="radio" name="contact_pref" value="email"> Email</label>
+        <label><input type="radio" name="contact_pref" value="phone"> Phone</label>
+        <label><input type="radio" name="contact_pref" value="mail"> Mail</label>
+      </div>
+      <div class="inline">
+        <label><input type="checkbox" name="newsletter"> Subscribe to newsletter</label>
+        <label><input type="checkbox" name="terms" required> Accept terms (required)</label>
+      </div>
+
+      <label for="skip1">Disabled (should be skipped)</label>
+      <input id="skip1" type="text" disabled>
+      <label for="skip2">Read-only (should be skipped)</label>
+      <input id="skip2" type="text" readonly value="untouched">
+      <input type="hidden" name="secret" value="untouched">
+    </fieldset>
+
+    <fieldset>
+      <legend>Long text</legend>
+      <label for="bio">Bio</label>
+      <textarea id="bio" name="bio" rows="5"></textarea>
+      <label for="msg">Message (maxlength 200)</label>
+      <textarea id="msg" name="message" rows="4" maxlength="200"></textarea>
+      <label>Rich text (contenteditable)</label>
+      <div contenteditable="true"></div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Shadow DOM widget</legend>
+      <div id="shadow-host"></div>
+    </fieldset>
+
+    <button type="submit">Submit</button>
+  </form>
+
+  <script>
+    const host = document.getElementById('shadow-host');
+    const root = host.attachShadow({ mode: 'open' });
+    root.innerHTML = `
+      <label for="s-email" style="display:block;font-weight:600;margin:10px 0 2px">Email inside shadow root</label>
+      <input id="s-email" name="email" type="email" style="padding:6px 8px">
+      <label for="s-notes" style="display:block;font-weight:600;margin:10px 0 2px">Notes inside shadow root</label>
+      <textarea id="s-notes" name="notes" rows="3" style="padding:6px 8px;width:90%"></textarea>
+    `;
+  </script>
+</body>
+</html>

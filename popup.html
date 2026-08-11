@@ -1,0 +1,52 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Form Filler</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header>
+    <img src="icons/icon48.png" alt="" width="24" height="24">
+    <h1>Form Filler</h1>
+  </header>
+
+  <button id="fill" class="primary">Fill forms on this page</button>
+
+  <label class="row check">
+    <input type="checkbox" id="onlyEmpty" checked>
+    <span>Only fill empty fields</span>
+  </label>
+
+  <label class="row">
+    <span>Paragraphs for text areas</span>
+    <input type="number" id="paragraphs" min="1" max="10" value="2">
+  </label>
+
+  <div id="status" class="status" hidden></div>
+
+  <hr>
+
+  <section>
+    <h2>Lorem Ipsum generator</h2>
+    <div class="row">
+      <input type="number" id="loremCount" min="1" max="50" value="3">
+      <select id="loremUnit">
+        <option value="paragraphs">paragraphs</option>
+        <option value="sentences">sentences</option>
+        <option value="words">words</option>
+      </select>
+    </div>
+    <div class="row buttons">
+      <button id="generate">Generate</button>
+      <button id="copy">Copy</button>
+    </div>
+    <textarea id="output" rows="7" spellcheck="false" placeholder="Generated text appears here…"></textarea>
+  </section>
+
+  <footer>Tip: right-click any text box → “Insert Lorem Ipsum here”. Alt+Shift+F fills the page.</footer>
+
+  <script src="lorem.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

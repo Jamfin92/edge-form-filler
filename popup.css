@@ -1,0 +1,111 @@
+:root {
+  color-scheme: light dark;
+  --accent: #4f46e5;
+  --accent-hover: #4338ca;
+  --bg: #ffffff;
+  --fg: #1f2430;
+  --muted: #6b7280;
+  --border: #d7dbe4;
+  --field-bg: #f6f7fa;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1e2129;
+    --fg: #e8eaf0;
+    --muted: #9aa1af;
+    --border: #3a3f4d;
+    --field-bg: #272b36;
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  width: 300px;
+  margin: 0;
+  padding: 14px;
+  font: 13px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+}
+
+header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+h1 { font-size: 15px; margin: 0; }
+h2 { font-size: 12px; margin: 0 0 8px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); }
+
+button {
+  font: inherit;
+  padding: 7px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--field-bg);
+  color: var(--fg);
+  cursor: pointer;
+}
+button:hover { border-color: var(--accent); }
+
+button.primary {
+  width: 100%;
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+  font-weight: 600;
+  padding: 9px 12px;
+}
+button.primary:hover { background: var(--accent-hover); }
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 10px;
+}
+.row.check { justify-content: flex-start; }
+.row.buttons { justify-content: flex-start; }
+.row.buttons button { flex: 1; }
+
+input[type="number"], select, textarea {
+  font: inherit;
+  color: var(--fg);
+  background: var(--field-bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 5px 8px;
+}
+input[type="number"] { width: 64px; }
+select { flex: 1; }
+
+textarea {
+  width: 100%;
+  margin-top: 10px;
+  resize: vertical;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 14px 0;
+}
+
+.status {
+  margin-top: 10px;
+  padding: 7px 10px;
+  border-radius: 6px;
+  background: var(--field-bg);
+  border: 1px solid var(--border);
+  font-size: 12px;
+}
+
+footer {
+  margin-top: 12px;
+  font-size: 11px;
+  color: var(--muted);
+}
