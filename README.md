@@ -51,9 +51,10 @@ After editing any file, go to `edge://extensions` and click the **Reload** (circ
 | Company, job title, department, industry, website | Sample values |
 | Product, service | Generated names (`Nimbus Tracker Pro`, `Premium Support`) |
 | USD currency (price, amount, cost, fee, total, salary, …) | `$1,234.56` — plain digits when the input is numeric-only; salaries as round yearly figures |
-| Make / manufacturer / brand, model, year, serial number, color/finish, type, capacity | One coherent object per run — a firearm, vehicle, or general product depending on context (the field's label, its fieldset/section/form, then the page). E.g. `Glock` · `G19` · `9mm Luger`, or `2019` · `Honda` · `Civic` |
+| Make / manufacturer / brand, model, year, serial number, color/finish, type, capacity | One coherent object per run — a firearm, vehicle, camera, or general product depending on context (the field's label, its fieldset/section/form, then the page). Every make has 2-3 real models, e.g. `Glock` · `G19` · `9mm Luger`, or `2024` · `Toyota` · `Crown` · `Bronze Age / Black` |
 | Firearm: caliber/gauge, action, barrel length, magazine capacity | Matches the chosen firearm (`Semi-automatic`, `4.02"`, `15`) |
-| Vehicle: VIN, license plate, trim, body style, mileage/odometer | Matches the chosen vehicle; VINs have a valid check digit and model-year code |
+| Vehicle: VIN, license plate, trim, body style, mileage/odometer | Matches the chosen vehicle; VINs have a valid check digit and model-year code. Models with a limited run (Toyota Crown: 2023–2025, its own factory colors) only get years and paint they were actually sold with |
+| Camera (camera/DSLR/mirrorless context): sensor, megapixels, lens mount, lens, ISO, video, stabilization, shutter speed/count, weight, battery, card slots | Real specs for Sony a7S III / a7 IV / a6700, Canon, Nikon, and Fujifilm bodies, with a lens for the right mount |
 | Quantity, percent/rate, SKU, order/invoice number, SSN | Plausible test values (SSN uses the invalid `000-…` range) |
 | Date / time / datetime / month / week / color / range / number | Valid values respecting `min`/`max`/`step`; birth dates get adult ages |
 | Card number / CVV / expiry | Standard test values (`4111 1111 1111 1111`) |
@@ -75,7 +76,7 @@ Field intent is detected from `name`, `id`, `placeholder`, `<label>`, `aria-labe
 
 ## Test page
 
-Open `test/test-form.html` in the browser for a page with every supported field type, including commerce/currency fields, firearm/vehicle/equipment details, a required-only section, conditional fields revealed by radio/checkbox choices (two levels deep), a shadow-DOM widget, a contenteditable editor, and disabled/read-only fields that should be skipped.
+Open `test/test-form.html` in the browser for a page with every supported field type, including commerce/currency fields, firearm/vehicle/camera/equipment details, a required-only section, conditional fields revealed by radio/checkbox choices (two levels deep), a shadow-DOM widget, a contenteditable editor, and disabled/read-only fields that should be skipped.
 
 ## Files
 
