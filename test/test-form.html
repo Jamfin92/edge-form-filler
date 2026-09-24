@@ -112,6 +112,69 @@
     </fieldset>
 
     <fieldset>
+      <legend>Firearm details</legend>
+      <label for="fa-make">Manufacturer</label>
+      <input id="fa-make" name="manufacturer" type="text">
+      <label for="fa-model">Model</label>
+      <input id="fa-model" name="model" type="text">
+      <label for="fa-cal">Caliber / gauge</label>
+      <input id="fa-cal" name="caliber" type="text">
+      <label for="fa-type">Firearm type</label>
+      <input id="fa-type" name="firearm_type" type="text">
+      <label for="fa-action">Action</label>
+      <input id="fa-action" name="action" type="text">
+      <label for="fa-barrel">Barrel length (in)</label>
+      <input id="fa-barrel" name="barrel_length" type="number" step="0.01">
+      <label for="fa-cap">Magazine capacity</label>
+      <input id="fa-cap" name="magazine_capacity" type="text">
+      <label for="fa-serial">Serial number</label>
+      <input id="fa-serial" name="serial_number" type="text">
+      <label for="fa-finish">Finish</label>
+      <input id="fa-finish" name="finish" type="text">
+    </fieldset>
+
+    <fieldset>
+      <legend>Vehicle details</legend>
+      <label for="v-year">Model year</label>
+      <input id="v-year" name="vehicle_year" type="number" min="1990" max="2026">
+      <label for="v-make">Make</label>
+      <select id="v-make" name="make">
+        <option value="">Select a make…</option>
+        <option>Ford</option>
+        <option>Honda</option>
+        <option>Subaru</option>
+      </select>
+      <label for="v-model">Model</label>
+      <input id="v-model" name="vehicle_model" type="text">
+      <label for="v-trim">Trim</label>
+      <input id="v-trim" name="trim" type="text">
+      <label for="v-body">Body style</label>
+      <input id="v-body" name="body_style" type="text">
+      <label for="v-color">Exterior color</label>
+      <input id="v-color" name="exterior_color" type="text">
+      <label for="v-vin">VIN</label>
+      <input id="v-vin" name="vin" type="text" maxlength="17">
+      <label for="v-plate">License plate</label>
+      <input id="v-plate" name="license_plate" type="text">
+      <label for="v-miles">Odometer (miles)</label>
+      <input id="v-miles" name="mileage" type="number">
+    </fieldset>
+
+    <fieldset>
+      <legend>Equipment</legend>
+      <label for="d-brand">Brand</label>
+      <input id="d-brand" name="brand" type="text">
+      <label for="d-model">Model</label>
+      <input id="d-model" name="equipment_model" type="text">
+      <label for="d-type">Device type</label>
+      <input id="d-type" name="device_type" type="text">
+      <label for="d-year">Year purchased</label>
+      <input id="d-year" name="purchase_year" type="text">
+      <label for="d-serial">S/N</label>
+      <input id="d-serial" name="sn" type="text">
+    </fieldset>
+
+    <fieldset>
       <legend>Required-only mode (enable “Only fill required fields”)</legend>
       <label for="req1">Company * (label asterisk)</label>
       <input id="req1" name="company_name" type="text">

@@ -51,10 +51,13 @@ After editing any file, go to `edge://extensions` and click the **Reload** (circ
 | Company, job title, department, industry, website | Sample values |
 | Product, service | Generated names (`Nimbus Tracker Pro`, `Premium Support`) |
 | USD currency (price, amount, cost, fee, total, salary, …) | `$1,234.56` — plain digits when the input is numeric-only; salaries as round yearly figures |
+| Make / manufacturer / brand, model, year, serial number, color/finish, type, capacity | One coherent object per run — a firearm, vehicle, or general product depending on context (the field's label, its fieldset/section/form, then the page). E.g. `Glock` · `G19` · `9mm Luger`, or `2019` · `Honda` · `Civic` |
+| Firearm: caliber/gauge, action, barrel length, magazine capacity | Matches the chosen firearm (`Semi-automatic`, `4.02"`, `15`) |
+| Vehicle: VIN, license plate, trim, body style, mileage/odometer | Matches the chosen vehicle; VINs have a valid check digit and model-year code |
 | Quantity, percent/rate, SKU, order/invoice number, SSN | Plausible test values (SSN uses the invalid `000-…` range) |
 | Date / time / datetime / month / week / color / range / number | Valid values respecting `min`/`max`/`step`; birth dates get adult ages |
 | Card number / CVV / expiry | Standard test values (`4111 1111 1111 1111`) |
-| Selects | Random real option (skips placeholder/disabled) |
+| Selects | The option matching what the field would otherwise get (make, caliber, state, …), else a random real option (skips placeholder/disabled). A make dropdown without the chosen make switches the object to a make it offers, so model/caliber stay consistent |
 | Radios / checkboxes | One per group / random, required ones always checked |
 | Textareas & contenteditable | Lorem Ipsum, respecting `maxlength` |
 | Anything unrecognized | A few capitalized lorem words |
@@ -72,7 +75,7 @@ Field intent is detected from `name`, `id`, `placeholder`, `<label>`, `aria-labe
 
 ## Test page
 
-Open `test/test-form.html` in the browser for a page with every supported field type, including commerce/currency fields, a required-only section, conditional fields revealed by radio/checkbox choices (two levels deep), a shadow-DOM widget, a contenteditable editor, and disabled/read-only fields that should be skipped.
+Open `test/test-form.html` in the browser for a page with every supported field type, including commerce/currency fields, firearm/vehicle/equipment details, a required-only section, conditional fields revealed by radio/checkbox choices (two levels deep), a shadow-DOM widget, a contenteditable editor, and disabled/read-only fields that should be skipped.
 
 ## Files
 

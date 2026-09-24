@@ -26,6 +26,134 @@
   const DEPARTMENTS = ['Engineering', 'Marketing', 'Sales', 'Operations', 'Finance', 'Human Resources', 'Customer Support', 'Design'];
   const INDUSTRIES = ['Software', 'Healthcare', 'Retail', 'Manufacturing', 'Education', 'Finance', 'Hospitality', 'Logistics'];
 
+  // Objects (firearms, vehicles, general products): each run picks one of
+  // each so make, model, caliber, year, serial, etc. agree with each other.
+  // Firearm models: [model, caliber, type, action, barrel inches, capacity].
+  const FIREARMS = [
+    ['Glock', [['G19', '9mm Luger', 'Pistol', 'Semi-automatic', '4.02', 15], ['G17', '9mm Luger', 'Pistol', 'Semi-automatic', '4.49', 17], ['G43X', '9mm Luger', 'Pistol', 'Semi-automatic', '3.41', 10]]],
+    ['Smith & Wesson', [['M&P9 Shield Plus', '9mm Luger', 'Pistol', 'Semi-automatic', '3.1', 13], ['Model 686', '.357 Magnum', 'Revolver', 'Double action', '4', 6], ['M&P15 Sport II', '5.56 NATO', 'Rifle', 'Semi-automatic', '16', 30]]],
+    ['Ruger', [['10/22 Carbine', '.22 LR', 'Rifle', 'Semi-automatic', '18.5', 10], ['LCP II', '.380 ACP', 'Pistol', 'Semi-automatic', '2.75', 6], ['GP100', '.357 Magnum', 'Revolver', 'Double action', '4.2', 6], ['American Rifle', '.308 Winchester', 'Rifle', 'Bolt action', '22', 4]]],
+    ['Sig Sauer', [['P320 Compact', '9mm Luger', 'Pistol', 'Semi-automatic', '3.9', 15], ['P365', '9mm Luger', 'Pistol', 'Semi-automatic', '3.1', 10], ['MCX Spear LT', '.300 Blackout', 'Rifle', 'Semi-automatic', '9', 30]]],
+    ['Remington', [['870 Express', '12 Gauge', 'Shotgun', 'Pump action', '28', 4], ['Model 700 SPS', '.308 Winchester', 'Rifle', 'Bolt action', '24', 4]]],
+    ['Mossberg', [['500 Field', '12 Gauge', 'Shotgun', 'Pump action', '28', 5], ['590A1', '12 Gauge', 'Shotgun', 'Pump action', '20', 8], ['Patriot', '6.5 Creedmoor', 'Rifle', 'Bolt action', '22', 5]]],
+    ['Springfield Armory', [['Hellcat', '9mm Luger', 'Pistol', 'Semi-automatic', '3', 11], ['XD-M Elite', '.45 ACP', 'Pistol', 'Semi-automatic', '4.5', 13]]],
+    ['Colt', [['1911 Government', '.45 ACP', 'Pistol', 'Semi-automatic', '5', 7], ['Python', '.357 Magnum', 'Revolver', 'Double action', '4.25', 6]]],
+    ['Beretta', [['92FS', '9mm Luger', 'Pistol', 'Semi-automatic', '4.9', 15], ['A300 Outlander', '12 Gauge', 'Shotgun', 'Semi-automatic', '28', 3]]],
+    ['Savage Arms', [['Axis II', '.30-06 Springfield', 'Rifle', 'Bolt action', '22', 4], ['Mark II FV', '.22 LR', 'Rifle', 'Bolt action', '21', 5]]]
+  ];
+  const FIREARM_FINISHES = ['Black', 'Matte Black', 'Stainless', 'Flat Dark Earth', 'OD Green', 'Blued'];
+  // Vehicles: [make, VIN manufacturer prefix, [[model, body style, trims]]].
+  const VEHICLES = [
+    ['Toyota', '4T1', [['Camry', 'Sedan', ['LE', 'SE', 'XLE']], ['RAV4', 'SUV', ['LE', 'XLE', 'Limited']], ['Tacoma', 'Pickup Truck', ['SR', 'SR5', 'TRD Off-Road']]]],
+    ['Honda', '1HG', [['Civic', 'Sedan', ['LX', 'Sport', 'EX']], ['Accord', 'Sedan', ['LX', 'EX-L', 'Touring']], ['CR-V', 'SUV', ['EX', 'EX-L', 'Sport']]]],
+    ['Ford', '1FT', [['F-150', 'Pickup Truck', ['XL', 'XLT', 'Lariat']], ['Escape', 'SUV', ['S', 'SE', 'Titanium']], ['Mustang', 'Coupe', ['EcoBoost', 'GT']]]],
+    ['Chevrolet', '1G1', [['Silverado 1500', 'Pickup Truck', ['WT', 'LT', 'RST']], ['Malibu', 'Sedan', ['LS', 'LT']], ['Equinox', 'SUV', ['LS', 'LT', 'Premier']]]],
+    ['Nissan', '1N4', [['Altima', 'Sedan', ['S', 'SV', 'SR']], ['Rogue', 'SUV', ['S', 'SV', 'SL']]]],
+    ['Subaru', '4S4', [['Outback', 'Wagon', ['Base', 'Premium', 'Limited']], ['Forester', 'SUV', ['Base', 'Premium', 'Sport']]]],
+    ['Jeep', '1C4', [['Wrangler', 'SUV', ['Sport', 'Sahara', 'Rubicon']], ['Grand Cherokee', 'SUV', ['Laredo', 'Limited']]]],
+    ['Tesla', '5YJ', [['Model 3', 'Sedan', ['Standard', 'Long Range']], ['Model Y', 'SUV', ['Long Range', 'Performance']]]],
+    ['Hyundai', '5NP', [['Elantra', 'Sedan', ['SE', 'SEL']], ['Tucson', 'SUV', ['SE', 'SEL', 'Limited']]]]
+  ];
+  const VEHICLE_COLORS = ['Black', 'White', 'Silver', 'Gray', 'Blue', 'Red', 'Green', 'Beige'];
+  // General products: [make, [[model, category]]].
+  const DEVICES = [
+    ['Apple', [['MacBook Air 13"', 'Laptop'], ['iPhone 15', 'Smartphone'], ['iPad Air', 'Tablet']]],
+    ['Samsung', [['Galaxy S24', 'Smartphone'], ['Galaxy Tab S9', 'Tablet'], ['RF28T5001SR', 'Refrigerator']]],
+    ['Dell', [['XPS 13', 'Laptop'], ['Latitude 5440', 'Laptop']]],
+    ['Lenovo', [['ThinkPad X1 Carbon', 'Laptop'], ['IdeaPad 5', 'Laptop']]],
+    ['HP', [['LaserJet Pro M404n', 'Printer'], ['EliteBook 840', 'Laptop']]],
+    ['Canon', [['EOS R6', 'Camera'], ['PIXMA TR4720', 'Printer']]],
+    ['Sony', [['WH-1000XM5', 'Headphones'], ['Bravia XR A80L', 'Television']]],
+    ['Whirlpool', [['WRF555SDFZ', 'Refrigerator'], ['WTW5000DW', 'Washer']]],
+    ['Bosch', [['SHPM88Z75N', 'Dishwasher']]],
+    ['DeWalt', [['DCD791D2', 'Drill']]]
+  ];
+  const DEVICE_COLORS = ['Black', 'Silver', 'Space Gray', 'White', 'Graphite', 'Blue'];
+
+  // Serial-number alphabet: no I, O or Q (easily confused with 1 and 0).
+  const SERIAL_CHARS = 'ABCDEFGHJKLMNPRSTUVWXYZ';
+  const serialLetters = (n) => Array.from({ length: n }, () => pick(SERIAL_CHARS)).join('');
+  const serialAlnum = (n) => Array.from({ length: n }, () => pick(SERIAL_CHARS + '0123456789')).join('');
+
+  // 17-character VIN with a valid check digit (position 9) and model-year
+  // code (position 10), so VIN validators accept it.
+  function makeVin(wmi, year) {
+    const translit = (c) => /\d/.test(c) ? Number(c) : 'ABCDEFGH'.includes(c) ? c.charCodeAt(0) - 64
+      : 'JKLMN'.includes(c) ? c.charCodeAt(0) - 73 : c === 'P' ? 7 : c === 'R' ? 9 : c.charCodeAt(0) - 81;
+    const weights = [8, 7, 6, 5, 4, 3, 2, 10, 0, 9, 8, 7, 6, 5, 4, 3, 2];
+    const yearCode = 'ABCDEFGHJKLMNPRSTVWXY123456789'[(year - 2010) % 30];
+    const chars = (wmi + serialAlnum(5) + '0' + yearCode + serialAlnum(1) + String(randInt(100000, 999999))).split('');
+    const sum = chars.reduce((acc, c, i) => acc + translit(c) * weights[i], 0);
+    chars[8] = sum % 11 === 10 ? 'X' : String(sum % 11);
+    return chars.join('');
+  }
+
+  function makeFirearm(make, year) {
+    const [mk, models] = make ? FIREARMS.find(([m]) => m === make) : pick(FIREARMS);
+    const [model, caliber, type, action, barrel, capacity] = pick(models);
+    return {
+      kind: 'firearm', make: mk, model, caliber, type, action, barrel, capacity: String(capacity),
+      year: year || String(randInt(2015, 2025)),
+      serial: serialLetters(3) + randInt(100000, 999999),
+      color: pick(FIREARM_FINISHES)
+    };
+  }
+
+  function makeVehicle(make, year) {
+    const [mk, wmi, models] = make ? VEHICLES.find(([m]) => m === make) : pick(VEHICLES);
+    const [model, body, trims] = pick(models);
+    year = Number(year) || randInt(2015, 2024);
+    return {
+      kind: 'vehicle', make: mk, model, trim: pick(trims), type: body, year: String(year),
+      vin: makeVin(wmi, year),
+      plate: `${randInt(1, 9)}${serialLetters(3)}${randInt(100, 999)}`,
+      mileage: String(randInt(5, 120) * 1000 + randInt(0, 999)),
+      capacity: body === 'Coupe' ? '4' : '5',
+      color: pick(VEHICLE_COLORS)
+    };
+  }
+
+  function makeDevice(make, year) {
+    const [mk, models] = make ? DEVICES.find(([m]) => m === make) : pick(DEVICES);
+    const [model, category] = pick(models);
+    return {
+      kind: 'device', make: mk, model, type: category,
+      year: year || String(randInt(2020, 2025)),
+      serial: serialAlnum(10),
+      capacity: pick(['128 GB', '256 GB', '512 GB']),
+      color: pick(DEVICE_COLORS)
+    };
+  }
+
+  const OBJECT_MAKERS = { firearm: [FIREARMS, makeFirearm], vehicle: [VEHICLES, makeVehicle], device: [DEVICES, makeDevice] };
+
+  // Which kind of object a field is about: its own label/name first, then the
+  // surrounding fieldset/section/form, then the page as a whole. At each
+  // level the kind with more keyword hits wins; a tie defers to the next. A
+  // page mixing both needs a clear (2x) majority, else it's general products.
+  const FIREARM_RE = /firearm|\bguns?\b|rifle|pistol|handgun|revolver|shotgun|calib(er|re)|\bgauge\b|\bammo\b|ammunition|\bffl\b|barrel|magazine|holster/g;
+  const VEHICLE_RE = /vehicle|\bvin\b|\bcars?\b|truck|\bauto\b|automobile|motorcycle|mileage|odometer|licen[cs]e plate|\bsuv\b|sedan|dealership/g;
+
+  function kindFromText(text, margin = 1) {
+    const f = (text.match(FIREARM_RE) || []).length;
+    const v = (text.match(VEHICLE_RE) || []).length;
+    return f > v * margin ? 'firearm' : v > f * margin ? 'vehicle' : null;
+  }
+
+  function objectFor(el, p) {
+    let kind = kindFromText(tokensFor(el));
+    const section = !kind && el.closest && el.closest('fieldset, section, form, [role="group"]');
+    if (section) kind = kindFromText(section.textContent.slice(0, 5000).toLowerCase());
+    if (!kind) {
+      if (p.pageKind === undefined) {
+        const text = `${document.title} ${document.body ? document.body.innerText.slice(0, 20000) : ''}`;
+        p.pageKind = kindFromText(text.toLowerCase(), 2) || 'device';
+      }
+      kind = p.pageKind;
+    }
+    return p[kind];
+  }
+
   function makePersona() {
     const first = pick(FIRST_NAMES);
     const last = pick(LAST_NAMES);
@@ -51,7 +179,10 @@
       company: pick(COMPANIES),
       job: pick(JOB_TITLES),
       website: `https://www.example.com/${last.toLowerCase()}`,
-      age: String(randInt(21, 65))
+      age: String(randInt(21, 65)),
+      firearm: makeFirearm(),
+      vehicle: makeVehicle(),
+      device: makeDevice()
     };
   }
 
@@ -68,7 +199,7 @@
     [/job|title|role|position|occupation/, (p) => p.job],
     [/address.?(2|two)|line.?2|\bapt\b|suite|\bunit\b(?!.?price)/, (p) => p.unit],
     [/street|address/, (p) => p.street],
-    [/city|town|locality/, (p) => p.city],
+    [/(?<!capa)city|town|locality/, (p) => p.city],
     [/state|province|region/, (p) => p.state],
     [/country/, (p) => p.country],
     [/website|url|domain|homepage/, (p) => p.website],
@@ -77,6 +208,23 @@
     [/card.?number|cc.?num/, () => '4111111111111111'],
     [/cvv|cvc|security.?code/, () => String(randInt(100, 999))],
     [/expir|exp.?date/, () => `12/${randInt(27, 32)}`],
+    // Objects. "model year" must hit year before model; "model number" is
+    // left to the SKU pattern below.
+    [/\bvin\b|vehicle.?ident/, (p) => p.vehicle.vin],
+    [/plate|registration.?(no|num)|\btag.?(no|num)/, (p) => p.vehicle.plate],
+    [/mileage|odometer|\bmiles\b/, (p) => p.vehicle.mileage],
+    [/\btrim\b/, (p) => p.vehicle.trim],
+    [/body.?(style|type)/, (p) => p.vehicle.type],
+    [/calib(er|re)|cartridge|chamber|\bgauge\b|ammunition|\bammo\b/, (p) => p.firearm.caliber],
+    [/barrel/, (p, el) => /inch|\bin\b|"/.test(tokensFor(el)) || isNumericOnly(el) ? p.firearm.barrel : `${p.firearm.barrel}"`],
+    [/\baction\b/, (p) => p.firearm.action],
+    [/(firearm|gun|weapon|vehicle|item|device|equipment|product).?(type|kind|class|category)/, (p, el) => objectFor(el, p).type],
+    [/model.?year|\byear\b|\byr\b/, (p, el) => objectFor(el, p).year],
+    [/\bmake\b|manufactur|\bmfr\b|\bmfg\b|\bbrand\b/, (p, el) => objectFor(el, p).make],
+    [/\bmodel\b(?!.?(no|num|#))/, (p, el) => objectFor(el, p).model],
+    [/serial|\bs\/n\b/, (p, el) => { const o = objectFor(el, p); return o.serial || o.vin; }],
+    [/capacity|mag(azine)?.?size|\brounds\b|seating|\bseats\b|storage/, (p, el) => objectFor(el, p).capacity],
+    [/colou?r|\bfinish\b/, (p, el) => objectFor(el, p).color],
     [/middle.?init|\bm\.?i\.?\b/, (p) => p.middle[0] + '.'],
     [/middle.?name|\bmiddle\b/, (p) => p.middle],
     [/salary|\bincome\b|compensation|annual.?pay/, (p, el) => usdWhole(30000, 200000, el)],
@@ -102,9 +250,10 @@
 
   // USD helpers: plain digits for inputs that reject symbols (numeric/decimal
   // inputmode or a digit-only pattern), "$1,234.56" style everywhere else.
+  const isNumericOnly = (el) => !!el && (el.inputMode === 'numeric' || el.inputMode === 'decimal' || /\d|0-9/.test(el.pattern || ''));
+
   function moneyFormat(n, el) {
-    const numericOnly = el && (el.inputMode === 'numeric' || el.inputMode === 'decimal' || /\d|0-9/.test(el.pattern || ''));
-    if (numericOnly) return Number.isInteger(n) ? String(n) : n.toFixed(2);
+    if (isNumericOnly(el)) return Number.isInteger(n) ? String(n) : n.toFixed(2);
     return '$' + n.toLocaleString('en-US', {
       minimumFractionDigits: Number.isInteger(n) ? 0 : 2,
       maximumFractionDigits: 2
@@ -255,6 +404,62 @@
 
   // -------------------------------------------------------------- fill logic
 
+  // Numeric object fields (year, mileage, barrel length, capacity) keep
+  // their object's value when it fits the input's min/max/step.
+  const NUMBER_HINTS = [
+    [/model.?year|\byear\b|\byr\b/, (p, el) => objectFor(el, p).year],
+    [/mileage|odometer|\bmiles\b/, (p) => p.vehicle.mileage],
+    [/barrel/, (p) => p.firearm.barrel],
+    [/capacity|mag(azine)?.?size|\brounds\b|seating|\bseats\b/, (p, el) => objectFor(el, p).capacity]
+  ];
+
+  function numberHint(el, persona) {
+    const tokens = tokensFor(el);
+    const hint = NUMBER_HINTS.find(([re]) => re.test(tokens));
+    if (!hint) return null;
+    const n = parseFloat(hint[1](persona, el));
+    if (Number.isNaN(n)) return null;
+    if ((el.min !== '' && n < Number(el.min)) || (el.max !== '' && n > Number(el.max))) return null;
+    if (el.step !== 'any') {
+      const step = Number(el.step) > 0 ? Number(el.step) : 1;
+      const offset = (n - (el.min !== '' ? Number(el.min) : 0)) / step;
+      if (Math.abs(offset - Math.round(offset)) > 1e-9) return null;
+    }
+    return String(n);
+  }
+
+  // The option a select should get to agree with the rest of the fill: the
+  // one matching what a text field with the same label would hold ("Glock",
+  // "9mm Luger", "CA"). A make select without our make still keeps the run
+  // coherent: if it offers another make we know, the object is re-rolled as
+  // that make (same year) so the model, caliber, etc. filled afterwards match.
+  function matchingOption(el, persona, opts) {
+    const tokens = tokensFor(el);
+    const hit = TEXT_PATTERNS.find(([re]) => re.test(tokens));
+    if (!hit || hit[0].source === 'name') return null;
+    const norm = (t) => t.trim().toLowerCase();
+    const esc = (t) => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const find = (want) => {
+      want = norm(String(want));
+      if (!want) return null;
+      return opts.find((o) => norm(o.text) === want || norm(o.value) === want) ||
+        opts.find((o) => {
+          const t = norm(o.text);
+          return t.length >= 2 && (new RegExp(`(^|\\W)${esc(t)}($|\\W)`).test(want) ||
+            new RegExp(`(^|\\W)${esc(want)}($|\\W)`).test(t));
+        }) || null;
+    };
+    const found = find(hit[1](persona, el));
+    if (found || !/\\bmake\\b/.test(hit[0].source)) return found;
+    const obj = objectFor(el, persona);
+    const [list, maker] = OBJECT_MAKERS[obj.kind];
+    for (const [make] of list) {
+      const o = find(make);
+      if (o) { persona[obj.kind] = maker(make, obj.year); return o; }
+    }
+    return null;
+  }
+
   function valueForInput(el, persona, options) {
     switch (el.type) {
       case 'email': return persona.email;
@@ -269,6 +474,8 @@
       case 'week': return `${randInt(2024, 2026)}-W${pad2(randInt(1, 52))}`;
       case 'number':
       case 'range': {
+        const hinted = numberHint(el, persona);
+        if (hinted !== null) return hinted;
         const min = el.min !== '' ? Number(el.min) : 1;
         const max = el.max !== '' ? Number(el.max) : Math.max(min + 99, 100);
         const step = el.step && Number(el.step) > 0 ? Number(el.step) : 1;
@@ -364,7 +571,7 @@
             el.dispatchEvent(new Event('input', { bubbles: true }));
             el.dispatchEvent(new Event('change', { bubbles: true }));
           } else {
-            setNativeValue(el, pick(opts).value);
+            setNativeValue(el, (matchingOption(el, persona, opts) || pick(opts)).value);
           }
           done.add(el);
           flash(el); filled++;
